@@ -1,0 +1,35 @@
+.llce-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #f0f0f0;
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.nav-button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 15px 25px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 18px;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.nav-button:last-child {
+  margin-bottom: 0;
+}
+
+.nav-button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+

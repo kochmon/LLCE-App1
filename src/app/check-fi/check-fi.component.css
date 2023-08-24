@@ -1,0 +1,76 @@
+.llce-check-fi {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fill-in {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.correct {
+  color: green;
+}
+
+.incorrect {
+  color: red;
+}
+
+.question-card {
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f7f7f7;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 70%;
+}
+
+h3 {
+  font-size: 1.5rem;
+}
+
+.answer-input {
+  margin-top: 20px;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.navigation {
+  margin-top: 20px;
+}
+
+.nav-button {
+  padding: 10px 20px;
+  font-size: 1rem;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.nav-button:last-child {
+  margin-right: 0;
+}
+
+.toggle-button {
+  margin-left: 10px;
+}
+
+.buttons-container {
+  margin-top: 20px;
+}
+
+.buttons-container button {
+  margin-right: 10px;
+}

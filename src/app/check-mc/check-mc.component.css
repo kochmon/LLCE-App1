@@ -1,0 +1,42 @@
+.question-container {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.multiple-choice {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+.correct {
+  color: green;
+}
+
+.incorrect {
+  color: red;
+}
+
+.answer-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.toggle-button {
+  margin-left: 10px;
+}
+
+.correct-toggle {
+  background-color: green;
+  color: white;
+}
+
+.buttons-container {
+  margin-top: 20px;
+}
+
+.buttons-container button {
+  margin-right: 10px;
+}

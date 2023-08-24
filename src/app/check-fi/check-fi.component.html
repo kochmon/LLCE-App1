@@ -1,0 +1,57 @@
+<p class="fill-in">Fill in questions</p>
+
+  <div class="question-container">
+    <p>Question {{ currentQuestion + 1 }}:</p>
+    <p>{{ question.qtxt }}</p>
+
+    <div *ngIf="question.qtyp === 'fi'; else mcScBlock">
+      <input type="text"
+        [(ngModel)]="question.qgivenanswerFillIn"
+        (input)="handleInputChange($event)"
+        placeholder="Type your answer..."
+      />
+    </div>
+
+    <ng-template #mcScBlock>
+      <div class="answer-container" *ngFor="let answer of question.qanswers; let i = index">
+        <label>
+          <input type="checkbox"
+            *ngIf="question.qtyp === 'mc'"
+            [(ngModel)]="answer.givenanswer"
+            [disabled]="whatIsCorrect"
+          />
+          <input type="checkbox"
+            *ngIf="question.qtyp === 'sc'"
+            [(ngModel)]="answer.givenanswer"
+            [disabled]="whatIsCorrect"
+          />
+          {{ answer.txt }}
+
+        <span class="correct" *ngIf="whatIsCorrect && answer.correct">
+          - Correct: {{ answer.correct}}
+        </span>
+        <span *ngIf="whatIsCorrect && !answer.correct">
+          - Incorrect: {{ answer.correct}}
+        </span>
+
+      </label>
+    </div>
+  </ng-template>
+
+    <br>
+  </div>
+
+  <div class="buttons-container">
+    <button (click)="prevQuestion()" [disabled]="currentQuestion === 0">Previous</button>
+    <button (click)="nextQuestion()" [disabled]="(!isQuestionAnswered(question))">Next</button>
+    <button (click)="skipQuestion()" >Skip</button>
+    <button (click)="finish()" >Finish</button>
+
+  </div>
+
+<ng-template #noQuestions>
+  <p>No more questions available.</p>
+</ng-template>
+
+<br>
+<button routerLink="/check">Go back to Check</button>

@@ -1,0 +1,34 @@
+&nbsp;
+<button routerLink="/learn">Go back to Learn</button>
+&nbsp;
+<p class="learn-list">Learn list questions</p>
+&nbsp;
+
+<div class="question-container" *ngFor="let question of questions; let i = index">
+  <p>Question {{ i + 1 }}:</p>
+  <p>{{ question.qtxt }}</p>
+  <div *ngFor="let answer of question.qanswers" >
+    <span *ngIf="!whatIsCorrect">
+      {{ answer.txt}}
+    </span>
+    <span class="correct" *ngIf="whatIsCorrect && answer.correct">
+      {{ answer.txt }} - {{ answer.correct }}
+    </span>
+    <span *ngIf="whatIsCorrect && !answer.correct">
+      {{ answer.txt }} -
+      <span class="incorrect">{{answer.correct}}</span>
+    </span>
+</div>
+
+<button class="toggle-button"
+(click)="toggleCorrect(currentQuestion)">
+  {{ whatIsCorrect ? 'Hide' : 'Show' }}
+</button>
+<br>
+</div>
+<br>>
+<button routerLink="/learn">Go back to Learn</button>
+
+
+
+

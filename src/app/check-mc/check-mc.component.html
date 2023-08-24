@@ -1,0 +1,42 @@
+<p class="multiple-choice">Multiple choice questions</p>
+
+<div class="question-container">
+    <p>Question {{ currentQuestion + 1 }}:</p>
+    <p>{{ question.qtxt }}</p>
+
+    <div class="answer-container" *ngFor="let answer of question?.qanswers; let i = index">
+      <label>
+        <input type="checkbox" [(ngModel)]="answer.givenanswer"
+          [disabled]="whatIsCorrect"/>
+          <span *ngIf="!whatIsCorrect">
+            {{ answer.txt }}
+          </span>
+        </label>
+        <span class="correct" *ngIf="whatIsCorrect && answer.correct">
+          {{ answer.txt }} - {{ answer.correct }}
+        </span>
+        <span *ngIf="whatIsCorrect && !answer.correct">
+          {{ answer.txt }} -
+          <span class="incorrect">{{ answer.correct }}</span>
+        </span>
+    </div>
+  </div>
+
+  <button class="toggle-button" (click)="toggleCorrect(currentQuestion)">
+    {{ whatIsCorrect ? 'Hide' : 'Show' }}
+  </button>
+
+  <div class="buttons-container">
+    <button (click)="prevQuestion()" [disabled]="currentQuestion === 0">Previous</button>
+    <button (click)="nextQuestion()" [disabled]="!isQuestionAnswered(question)">Next</button>
+    <button (click)="firstQuestion()" [disabled]="currentQuestion === 0">First</button>
+    <button (click)="lastQuestion()" [disabled]="currentQuestion === questions.length - 1">Last</button>
+    <button (click)="finish">Finish</button>
+  </div>
+
+
+<ng-template #noQuestions>
+  <p>No questions available.</p>
+</ng-template>
+<br>
+<button routerLink="/check">Go back to Check</button>

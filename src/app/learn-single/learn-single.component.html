@@ -1,0 +1,39 @@
+<p class="learn-single">Learn single questions</p>
+&nbsp;
+<div class="question-container">
+  <p>Question {{ currentQuestion + 1 }}:</p>
+  <p>{{ question.qtxt }}</p>
+    <div *ngFor="let answer of question.qanswers" >
+      <span *ngIf="!whatIsCorrect">
+        {{ answer.txt}}
+      </span>
+      <span class="correct" *ngIf="whatIsCorrect && answer.correct">
+        {{ answer.txt }} - {{ answer.correct }}
+      </span>
+      <span *ngIf="whatIsCorrect && !answer.correct">
+        {{ answer.txt }} -
+        <span class="incorrect">{{answer.correct}}</span>
+      </span>
+
+  </div>
+</div>
+
+
+  <button class="toggle-button"
+  (click)="toggleCorrect(currentQuestion)">
+    {{ whatIsCorrect ? 'Hide' : 'Show' }}
+  </button>
+
+<ng-template *ngIf="question" #noQuestion>
+  <p>No more questions available!</p>
+</ng-template>
+
+<div class="buttons-container">
+  <button (click)="prevQuestion()" [disabled]="currentQuestion === 0">Previous</button>
+  <button (click)="nextQuestion()" [disabled]="currentQuestion === questions.length - 1">Next</button>
+  <button (click)="firstQuestion()" [disabled]="currentQuestion === 0">First</button>
+  <button (click)="lastQuestion()" [disabled]="currentQuestion === questions.length - 1">Last</button>
+</div>
+<br>
+<button routerLink="/learn">Go back to Learn</button>
+
