@@ -1,7 +1,8 @@
-import { Answer } from './../question';
+// import { Answer } from './../question';
 import { Component } from '@angular/core';
 import { Question } from '../question';
 import { QueriesService } from '../queries.service';
+
 
 @Component({
   selector: 'llce-check-fi',
@@ -16,33 +17,35 @@ export class CheckFiComponent {
   currentQuestion: number = -1;
   popupWarning: boolean = false;
   incorrectlyAnsweredCount: number = 0;
+  totalQuestions: number;
+  incorrectQuestionsCheck: number = 0;
+  examFailMessageCheck: boolean = false;
+
 
   constructor(private qs: QueriesService) {
     this.questions = this.qs.getAll().filter((q) => q.qtyp == 'fi');
     // antworten initialisieren
-    this.questions.map((q) => {
-      q.qtyp == 'mc';
+    this.questions.map((q) => { q.qtyp = 'mc';
       q.qanswers.map((a) => (a.givenanswer = false));
     });
-    this.questions.map((q) => {
-      q.qtyp == 'sc';
+    this.questions.map((q) => { q.qtyp = 'sc';
       q.qanswers.map((a) => (a.givenanswer = false));
     });
-    this.questions.map((q) => {
-      q.qtyp == 'fi';
+    this.questions.map((q) => { q.qtyp = 'fi';
       q.qgivenanswerFillIn = '';
     });
-    this.questions.map((q) => {
-      q.qtyp == 'fi';
+    this.questions.map((q) => { q.qtyp = 'fi';
       q.qanswers[0].givenanswer = false;
     });
 
     this.currentQuestion = 0;
     this.question = this.questions[this.currentQuestion];
+    this.totalQuestions = this.questions.length;
+
   }
 
   toggleCorrect(ind: number) {
-    if (this.currentQuestion === ind) {
+    if (this.currentQuestion == ind) {
       this.whatIsCorrect = !this.whatIsCorrect;
     } else {
       this.currentQuestion = ind;
@@ -60,11 +63,8 @@ export class CheckFiComponent {
   }
 
   nextQuestion() {
-    // check mode: if q is not answered -> next question
-    //             if q is answered -> check if ok else 1 q back
     let nextQuestion = false;
     if (this.isQuestionAnswered(this.question)) {
-      // console.log('q answered');
 
     }
     if (nextQuestion) {
@@ -76,13 +76,6 @@ export class CheckFiComponent {
     this.whatIsCorrect = false;
   }
 
-  /* isQuestionAnswered(): boolean {
-    if(this.question.qtyp === 'fi') {
-      return this.question.qgivenanswerFillIn?.trim() !== '';
-    } else {
-      return this.question.qanswers.some(ans => ans.givenanswer);
-    }
-  } */
 
   isQuestionAnswered(question: Question): boolean {
     // is givenanswer = true
@@ -109,21 +102,16 @@ export class CheckFiComponent {
 
   keyInput(input: string) {
     if (input.length == 0) {
-      // input is empty -> no answer given
       this.question.qgivenanswerFillIn = '';
       this.question.qanswers[0].givenanswer = false;
     } else {
-      // store answer ans set givenanswer = true
       this.question.qgivenanswerFillIn = input;
       this.question.qanswers[0].givenanswer = true;
     }
-    // console.log(input);
   }
 
   isQuestionAnswerOk(question: Question): boolean {
-    // check ms/sc
     if (this.question.qtyp === 'mc' || this.question.qtyp === 'sc') {
-      // finde eine falsche Antwort -> gesamte Frage ist falsch
       if (
         this.question.qanswers.find((ans) => ans.correct != ans.givenanswer)
       ) {
@@ -133,16 +121,13 @@ export class CheckFiComponent {
         return true;
       }
     } else if (this.question.qtyp === 'fi') {
-      // check fi
       if (this.question.qgivenanswerFillIn !== '') {
-        // Antwort gegeben : check korrekt Anstwort
 
         if (
           this.question.qanswers.findIndex(
             (a) => a.txt[0] == this.question.qgivenanswerFillIn
           ) != -1
         ) {
-          // correct answer found
           return true;
         } else {
           return false;
@@ -151,7 +136,6 @@ export class CheckFiComponent {
         return false;
       }
     } else {
-      // not either mc/sc/fi
       return false;
     }
   }
@@ -209,5 +193,11 @@ export class CheckFiComponent {
   showResults(answeredCorrectly: number, answeredIncorrectly: number) {
     const message = `Questions answered correctly: ${answeredCorrectly}\nQuestions answered incorrectly: ${answeredIncorrectly}`;
     alert(message);
+  }
+  failExamCheck(){
+    if (this.incorrectQuestionsCheck > 7){
+
+      this.examFailMessageCheck = true;
+    }
   }
 }

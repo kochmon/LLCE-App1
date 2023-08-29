@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Question } from '../question';
 import { QueriesService } from '../queries.service';
 
+
 @Component({
   selector: 'llce-check-sc',
   templateUrl: './check-sc.component.html',
@@ -14,6 +15,10 @@ export class CheckScComponent {
   currentQuestion: number = -1;
   popupWarning: boolean = false;
   incorrectlyAnsweredCount: number = 0;
+  totalQuestions: number;
+  incorrectQuestionsCheck: number = 0;
+  examFailMessageCheck: boolean=false;
+
 
 
   constructor(private qs: QueriesService) {
@@ -26,6 +31,8 @@ export class CheckScComponent {
 
     this.currentQuestion = 0;
     this.question = this.questions[this.currentQuestion];
+    this.totalQuestions = this.questions.length;
+
   }
 
   toggleCorrect(ind: number) {
@@ -47,18 +54,12 @@ export class CheckScComponent {
   }
 
   nextQuestion() {
-    // check mode: if q is not answered -> next question
-    //             if q is answered -> check if ok else 1 q back
     let nextQuestion = false;
     if (this.isQuestionAnswered(this.question)) {
-      console.log('q answered')
-      // frage prüfen ob ok: if ok -> next question else 1 q back
       if (this.isQuestionAnswerOk(this.question)) {
-      console.log('answer(s) ok')
-      nextQuestion = true;
+      this.incorrectQuestionsCheck++;
+      this.failExamCheck();
       } else {
-        // answer not ok -> warning and 1 question back
-        console.log('popup warning')
         this.resetCurrentAnsweredQuestion()
         this.resetPreviousAnsweredQuestion()
         this.prevQuestion();
@@ -77,9 +78,8 @@ export class CheckScComponent {
   }
 
   isQuestionAnswered(question: Question): boolean  {
-    // ist ein givenanswer = true
     if (
-      this.question.qanswers.findIndex((ans) => ans.givenanswer === true) != -1
+      this.question.qanswers.findIndex((ans) => ans.givenanswer === true) == -1
     ) {
       return true;
     } else {
@@ -155,6 +155,13 @@ export class CheckScComponent {
   showResults(answeredCorrectly: number, answeredIncorrectly: number) {
     const message = `Questions answered correctly: ${answeredCorrectly}\nQuestions answered incorrectly: ${answeredIncorrectly}`;
     alert(message);
+  }
+
+  failExamCheck(){
+    if (this.incorrectQuestionsCheck > 7){
+
+      this.examFailMessageCheck = true;
+    }
   }
 
 }

@@ -1,31 +1,27 @@
-<p class="multiple-choice">Multiple choice questions</p>
-
-<div class="question-container">
-    <p>Question {{ currentQuestion + 1 }}:</p>
-    <p>{{ question.qtxt }}</p>
-
-    <div class="answer-container" *ngFor="let answer of question?.qanswers; let i = index">
-      <label>
+<div *ngIf="!examFailMessageCheck">
+  <div class="llce-check-mc">
+    <h1 class="check-multiple">Multiple choice questions</h1>
+    <div class="question-container">
+      <h2>Question {{ currentQuestion + 1 }} of {{ totalQuestions }}:</h2>
+      <p>{{ question.qtxt }}</p>
+      <div class="answer-container" *ngFor="let answer of question?.qanswers; let i = index">
         <input type="checkbox" [(ngModel)]="answer.givenanswer"
           [disabled]="whatIsCorrect"/>
           <span *ngIf="!whatIsCorrect">
             {{ answer.txt }}
           </span>
-        </label>
-        <span class="correct" *ngIf="whatIsCorrect && answer.correct">
-          {{ answer.txt }} - {{ answer.correct }}
-        </span>
-        <span *ngIf="whatIsCorrect && !answer.correct">
-          {{ answer.txt }} -
+          <span class="correct" *ngIf="whatIsCorrect && answer.correct">
+            {{ answer.txt }} - {{ answer.correct }}
+          </span>
+          <span *ngIf="whatIsCorrect && !answer.correct">
+            {{ answer.txt }} -
           <span class="incorrect">{{ answer.correct }}</span>
-        </span>
+          </span>
+      </div>
     </div>
-  </div>
-
-  <button class="toggle-button" (click)="toggleCorrect(currentQuestion)">
-    {{ whatIsCorrect ? 'Hide' : 'Show' }}
-  </button>
-
+    <button class="toggle-button" (click)="toggleCorrect(currentQuestion)">
+      {{ whatIsCorrect ? 'Hide' : 'Show' }}
+    </button>
   <div class="buttons-container">
     <button (click)="prevQuestion()" [disabled]="currentQuestion === 0">Previous</button>
     <button (click)="nextQuestion()" [disabled]="!isQuestionAnswered(question)">Next</button>
@@ -33,10 +29,12 @@
     <button (click)="lastQuestion()" [disabled]="currentQuestion === questions.length - 1">Last</button>
     <button (click)="finish">Finish</button>
   </div>
-
-
-<ng-template #noQuestions>
-  <p>No questions available.</p>
-</ng-template>
 <br>
 <button routerLink="/check">Go back to Check</button>
+</div>
+</div>
+<div *ngIf="examFailMessageCheck">
+  "You did not pass the exam. Please review the Learn mode."
+  <br>
+  <button routerLink="/learn">Go back to Learn</button>
+</div>

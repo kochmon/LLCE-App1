@@ -13,12 +13,15 @@ export class LearnSingleComponent {
   whatIsCorrect: boolean = false
   currentQuestion: number = -1
   selectedAnswerIndex: any;
+  totalQuestions: number;
 
 
   constructor(private qs: QueriesService) {
     this.questions = this.qs.getAll();
     this.currentQuestion = 0
     this.question = this.questions[this.currentQuestion]
+    this.totalQuestions = this.questions.length;
+
   }
 
   isQuestionAnswered(): boolean {

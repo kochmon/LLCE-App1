@@ -1,7 +1,21 @@
+.llce-exam {
+  padding: 20px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+}
 .question-container {
   border: 1px solid #ccc;
   padding: 10px;
   margin-bottom: 20px;
+}
+
+.exam {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
 }
 
 .single-choice {
@@ -46,3 +60,25 @@
 .buttons-container button {
   margin-right: 10px;
 }
+
+.exam-fail-message {
+  border: 1px solid #ccc;
+  padding: 20px;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.exam-fail-message p {
+  margin: 0 0 10px;
+}
+
+.exam-fail-message button {
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+

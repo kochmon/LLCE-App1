@@ -1,52 +1,57 @@
-<p class="exam">Exam Mode</p>
 
-<div class="question-container">
-  <p>Question {{ currentQuestion + 1 }}:</p>
-  <p>{{ question.qtxt }}</p>
+<div *ngIf="!examFailMessage">
+<div class="llce-exam">
 
-  <div *ngIf="question.qtyp === 'fi'; else mcScBlock">
-    <input type="text"
-    [(ngModel)]="question.qgivenanswerFillIn"
-    (input)="handleInputChange($event)"
-    placeholder="Type your answer..."/>
+  <h1 class="exam">Exam Mode</h1>
+
+  <div class="question-container">
+    <h2>Question {{ currentQuestion + 1 }} of {{ totalQuestions }}:</h2>
+    <p>{{ question.qtxt }}</p>
+
+    <div *ngIf="question.qtyp === 'mc' || question.qtyp === 'sc'">
+      <div class="answer-container" *ngFor="let answer of question.qanswers; let i = index">
+        <label>
+          <input type="checkbox" *ngIf="question.qtyp === 'mc'" name="answer" [(ngModel)]="answer.givenanswer" [disabled]="whatIsCorrect" />
+          <input type="checkbox" *ngIf="question.qtyp === 'sc'" name="answer" [(ngModel)]="answer.givenanswer" [disabled]="whatIsCorrect" />
+          {{ answer.txt }}
+        </label>
+      </div>
+    </div>
   </div>
 
-  <ng-template #mcScBlock>
-    <div class="answer-container" *ngFor="let answer of question.qanswers; let i = index">
-      <label>
-        <input type="checkbox" name="answer" *ngIf="question.qtyp === 'mc'"
-          [(ngModel)]="answer.givenanswer"
-          [disabled]="whatIsCorrect"/>
+    <div *ngIf="question.qtyp === 'fi' ">
+      <ng-container *ngIf="question.qtyp === 'fi'">
+        <input
+          type="text"
+          [(ngModel)]="question.qgivenanswerFillIn"
+          (input)="handleInputChange($event)"
+          placeholder="Type your answer..."
+        />
+      </ng-container>
+      </div>
 
-        <input type="checkbox" name="answer" *ngIf="question.qtyp === 'sc'"
-          [(ngModel)]="answer.givenanswer"
-          [disabled]="whatIsCorrect"/>
-            {{ answer.txt }}
+      <div class="buttons-container">
+        <button (click)="prevQuestion()" [disabled]="currentQuestion === 0">
+          Previous
+        </button>
+        <button (click)="nextQuestion()" [disabled]="currentQuestion === questions.length - 1">
+          Next
+        </button>
+        <button (click)="skipQuestion()">
+          Skip
+        </button>
+        <button (click)="finish()" [disabled]="currentQuestion < questions.length - 1">
+          Finish
+        </button>
+      </div>
+      <br>
+      <button routerLink="/main">Go back to Main</button>
 
-      </label>
-
-      <!-- <span class="correct" *ngIf="whatIsCorrect && answer.correct">
-        - Correct: {{ answer.correct}}
-      </span>
-      <span *ngIf="whatIsCorrect && !answer.correct">
-        - Incorrect: {{ answer.correct}}
-      </span> -->
-
+    </div>
   </div>
-</ng-template>
+
+<div class="exam-fail-message" *ngIf="examFailMessage">
+  "You did not pass the exam. Please review the Learn mode."
+  <br>
+  <button routerLink="/learn">Go back to Learn</button>
 </div>
-
-<div class="buttons-container">
-  <button (click)="prevQuestion()" [disabled]="currentQuestion === 0">Previous</button>
-  <!-- <button (click)="nextQuestion()" [disabled]="currentQuestion === questions.length - 1">Next</button> -->
-  <button (click)="skipQuestion()">Skip</button>
-  <button (click)="finish()">Finish</button>
-</div>
-
-<ng-template #noQuestions>
-  <p>No more questions available.</p>
-</ng-template>
-
-<br>
-  <button routerLink="/main">Go back to Main</button>
-

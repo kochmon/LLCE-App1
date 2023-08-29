@@ -1,14 +1,21 @@
-.llce-check-fi {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.check-fill-in {
+  padding: 20px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+}
+.question-container {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 20px;
 }
 
 .fill-in {
-  font-size: 16px;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 10px;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
 }
 
 .correct {

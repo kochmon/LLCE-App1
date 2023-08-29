@@ -1,42 +1,42 @@
+.llce-check-sc {
+  padding: 20px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+}
 .question-container {
   border: 1px solid #ccc;
   padding: 10px;
   margin-bottom: 20px;
 }
-
-.single-choice {
-  font-size: 16px;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 10px;
+.check-single {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
 }
-.correct {
-  color: green;
-}
-
-.incorrect {
-  color: red;
-}
-
 .answer-container {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
 }
-
+.correct {
+  color: green;
+}
+.incorrect {
+  color: red;
+}
 .toggle-button {
   margin-left: 10px;
 }
-
 .correct-toggle {
   background-color: green;
   color: white;
 }
-
 .buttons-container {
   margin-top: 20px;
 }
-
 .buttons-container button {
   margin-right: 10px;
 }

@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { Question } from '../question';
-import { QueriesService } from '../queries.service';
+import { QueriesService } from './../queries.service';
+import { Question } from './../question';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   templateUrl: './exam.component.html',
   styleUrls: ['./exam.component.css']
 })
-export class ExamComponent implements OnInit{
+export class ExamComponent {
 
   questions: Question[];
   question: Question;
@@ -18,10 +18,14 @@ export class ExamComponent implements OnInit{
   totalQuestions: number;
   guessedQuestions: number = 0;
   incorrectQuestions: number = 0;
+  showLearnButton: boolean = false;
+  examFailMessage: boolean = false;
+  currentQuestionType: string;
 
   constructor(private qs: QueriesService, private router: Router) {
-    // get Single Choice Questions
-    this.questions = this.qs.getAll().filter((q) => q.qtyp == 'sc');
+    // get All Questions
+    this.questions = this.qs.getAll();
+
     // antworten initialisieren
     this.questions.map(q => {q.qtyp == 'mc'; q.qanswers.map(a => a.givenanswer = false)})
     this.questions.map(q => {q.qtyp == 'sc'; q.qanswers.map(a => a.givenanswer = false)})
@@ -31,32 +35,16 @@ export class ExamComponent implements OnInit{
     this.question = this.questions[this.currentQuestion];
     this.totalQuestions = this.questions.length;
 
-    this.questions = this.qs.getAll().filter((q) => q.qtyp == 'sc');
-    this.shuffleQuestions();
+    this.currentQuestionType = this.questions[this.currentQuestion].qtyp;
   }
 
-  // goToLearnMode() {
-  //   this.router.navigate(['/learn']); // Redirect to the Learn mode
-  // }
-
-  ngOnInit() {
-    const shuffledQuestions = this.shuffleArray(this.questions);
-    this.questions = shuffledQuestions;
-  }
-
-  shuffleArray(array: any[]): any[] {
-    const shuffledArray = [...array];
-    for(let i = shuffledArray.length - 1; i > 0; i++){
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
-    }
-    return shuffledArray;
+  goToLearnMode() {
+    this.router.navigate(['/learn']); // Redirect to the Learn mode
   }
 
   shuffleQuestions() {
-    // Mische die Fragen in zufälliger Reihenfolge
-    const shuffledQuestions = this.shuffleArray(this.questions);
-    this.questions = shuffledQuestions;
+    this.questions = this.questions.sort((a,b) => 0.5 - Math.random());
+    this.checkQuestionStatus();
   }
 
   toggleCorrect(ind: number) {
@@ -80,28 +68,25 @@ export class ExamComponent implements OnInit{
   nextQuestion() {
     // check mode: if q is not answered -> next question
     //             if q is answered -> check if ok else 1 q back
-    let nextQuestion = false;
+    let nextQuestion = true;
     if (this.isQuestionAnswered(this.question)) {
       console.log('q answered')
       // frage prüfen ob ok: if ok -> next question else 1 q back
-      if (this.isQuestionAnswerOk(this.question)) {
+      if (!this.isQuestionAnswerOk(this.question)) {
       console.log('answer(s) ok')
-      nextQuestion = true;
-      } else {
+      this.incorrectQuestions++;
+      this.failExam();
+      } else if (this.isQuestionAnswerGuessed(this.question)) {
         // answer not ok -> warning and 1 question back
         console.log('popup warning')
-        this.resetCurrentAnsweredQuestion()
-        this.resetPreviousAnsweredQuestion()
-        this.prevQuestion();
-        this.popupWarning = true;
+        this.guessedQuestions++;
       }
-    } else {
-      nextQuestion = true;
     }
     if (nextQuestion) {
       if (this.currentQuestion < this.questions.length - 1) {
         this.currentQuestion++;
         this.question = this.questions[this.currentQuestion];
+        this.currentQuestionType = this.question.qtyp;
       }
     }
     this.popupWarning = false;
@@ -117,7 +102,6 @@ export class ExamComponent implements OnInit{
       this.question.qgivenanswerFillIn = input;
       this.question.qanswers[0].givenanswer = true;
     }
-    // console.log(input);
   }
 
   isQuestionAnswered(question: Question): boolean  {
@@ -130,7 +114,6 @@ export class ExamComponent implements OnInit{
       return false;
     }
   }
-
 
   selectAnswerSC(ind: number) {
     // reset all givenanswer to false (this is single choice)
@@ -201,43 +184,28 @@ export class ExamComponent implements OnInit{
         }
       }
     }
-    // this.showResults(answeredCorrectly, answeredIncorrectly);
 
     const incorrectPercentage = (this.incorrectQuestions / this.totalQuestions) * 100;
-    if(incorrectPercentage >=20) {
-      this.showResults(answeredCorrectly, answeredIncorrectly, true);
+    if(incorrectPercentage > 20) {
+      // Prüfung nicht bestanden
+      this.failExam();
     } else {
-      this.showResults(answeredCorrectly, answeredIncorrectly, false);
+      // Prüfung bestanden
+      this.showResults(answeredCorrectly, answeredIncorrectly);
     }
   }
 
-  // finish() {
-  //   let answeredCorrectly = 0;
-  //   let answeredIncorrectly = 0;
-  //   // Überprüfe den Prozentsatz der falsch beantworteten Fragen
-  //   const incorrectPercentage = (this.incorrectQuestions / this.totalQuestions) * 100;
-
-  //   if (incorrectPercentage >= 20) {
-  //     // Prüfung nicht bestanden
-  //     this.failExam();
-  //   } else {
-  //     // Prüfung bestanden
-  //     this.showResults(answeredCorrectly, answeredIncorrectly, false);
-  //   }
-  // }
-
-  showResults(answeredCorrectly: number, answeredIncorrectly: number, isAborted: boolean) {
+  showResults(answeredCorrectly: number, answeredIncorrectly: number) {
     const message = `Questions answered correctly: ${answeredCorrectly}\nQuestions answered incorrectly: ${answeredIncorrectly}`;
     alert(message);
-    if(isAborted) {
-      alert(`${message}\n\nPrüfmodus abgebrochen aufgrund von mehr als 20% falsch beantworteten Fragen.`);
-    } else {
-      alert(message);
+
+  }
+
+  failExam(){
+    if (this.incorrectQuestions > this.totalQuestions*0.2 ){
+
+      this.examFailMessage=true
     }
   }
 
-  failExam() {
-    alert("You did not pass the exam. Please review the Learn mode.");
-    this.router.navigate(['/learn']); // Umleitung zur Learn-Seite
-  }
 }
